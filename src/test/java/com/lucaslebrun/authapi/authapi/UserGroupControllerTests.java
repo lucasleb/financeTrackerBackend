@@ -47,17 +47,21 @@ public class UserGroupControllerTests {
     @Autowired
     private UserGroupRepository userGroupRepository; // Assuming UserGroupRepository exists
 
+    private User mockUser;
+    private User mockUser2;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         userGroupRepository.deleteAll();
         userRepository.deleteAll();
+        mockUser = new User("John Doe", "test@example.com", "password");
+        mockUser2 = new User("John Doe2", "test2@example.com", "password2");
     }
 
     // TESTS 'mygroups' endpoints
     @Test
     public void testGetGroups_AuthenticatedUser() throws Exception {
-        User mockUser = new User("John Doe", "test@example.com", "password");
         signUpUser(mockUser);
         String jwtToken = loginUser(mockUser);
 
@@ -83,7 +87,6 @@ public class UserGroupControllerTests {
     // TESTS 'createGroup' endpoints
     @Test
     public void testCreateGroups_AuthenticatedUser() throws Exception {
-        User mockUser = new User("John Doe", "test@example.com", "password");
         signUpUser(mockUser);
         String jwtToken = loginUser(mockUser);
 
@@ -120,7 +123,6 @@ public class UserGroupControllerTests {
     // TESTS 'getGroup' endpoints
     @Test
     public void testGetGroup_AuthenticatedUser_CanAccessOwnGroups() throws Exception {
-        User mockUser = new User("John Doe", "test@example.com", "password");
         signUpUser(mockUser);
         String jwtToken = loginUser(mockUser);
 
@@ -140,19 +142,18 @@ public class UserGroupControllerTests {
     public void testGetGroup_AuthenticatedUser_CannotAccessOtherUserGroups()
             throws Exception {
 
-        User mockUser2 = new User("John Doe2", "test2@example.com", "password2");
-        signUpUser(mockUser2);
+        userRepository.save(mockUser2);
 
-        User mockUser = new User("John Doe", "test@example.com", "password");
+        UserGroup userGroup = new UserGroup("John Doe2's Personal Finances", mockUser2);
+        Integer id = userGroupRepository.save(userGroup).getId();
+
         signUpUser(mockUser);
         String jwtToken = loginUser(mockUser);
 
-        MvcResult result = mockMvc.perform(get("/usergroups")
+        mockMvc.perform(get("/usergroups/" + id)
                 .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(status().isForbidden());
 
-        String responseContent = result.getResponse().getContentAsString();
     }
 
     @Test
@@ -168,7 +169,6 @@ public class UserGroupControllerTests {
     @Test
     public void testUpdateGroup_AuthenticatedUser_CanUpdateOwnGroups() throws Exception {
 
-        User mockUser = new User("John Doe", "test@example.com", "password");
         signUpUser(mockUser);
         String jwtToken = loginUser(mockUser);
 
@@ -192,10 +192,8 @@ public class UserGroupControllerTests {
 
     @Test
     public void testUpdateGroup_AuthenticatedUser_CannotUpdateOtherUserGroups() throws Exception {
-        User mockUser = new User("John Doe", "test@example.com", "password");
         signUpUser(mockUser);
 
-        User mockUser2 = new User("John Doe2", "test2@example.com", "password");
         userRepository.save(mockUser2);
 
         UserGroup userGroup = new UserGroup("John Doe2's Personal Finances", mockUser2);
@@ -218,7 +216,6 @@ public class UserGroupControllerTests {
         // Clear authentication (simulate no user logged in)
         SecurityContextHolder.clearContext();
 
-        User mockUser = new User("John Doe", "test@example.com", "password");
         userRepository.save(mockUser);
 
         UserGroup userGroup = new UserGroup("John Doe2's Personal Finances", mockUser);
@@ -236,7 +233,6 @@ public class UserGroupControllerTests {
     @Test
     public void testDeleteGroup_AuthenticatedUser_CanDeleteOwnGroups() throws Exception {
 
-        User mockUser = new User("John Doe", "test@example.com", "password");
         signUpUser(mockUser);
         String jwtToken = loginUser(mockUser);
 
@@ -259,10 +255,8 @@ public class UserGroupControllerTests {
 
     @Test
     public void testDeleteGroup_AuthenticatedUser_CannotDeleteOtherUserGroups() throws Exception {
-        User mockUser = new User("John Doe", "test@example.com", "password");
         signUpUser(mockUser);
 
-        User mockUser2 = new User("John Doe2", "test2@example.com", "password");
         userRepository.save(mockUser2);
 
         UserGroup userGroup = new UserGroup("John Doe2's Personal Finances", mockUser2);

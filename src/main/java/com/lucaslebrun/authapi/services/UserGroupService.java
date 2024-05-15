@@ -20,11 +20,17 @@ public class UserGroupService {
         this.userGroupRepository = userGroupRepository;
     }
 
-    public List<UserGroup> findGroupsByUser(User user) {
+    public List<UserGroup> findGroupsByMember(User user) {
         List<UserGroup> groupList = userGroupRepository.findByMembersContaining(user);
         groupList.forEach(group -> Hibernate.initialize(group.getMembers()));
         return groupList;
     }
+
+    public List<UserGroup> findGroupsByAdmin(User user) {
+        List<UserGroup> groups = userGroupRepository.findByAdmin(user);
+        return groups;        
+    }
+
 
     public Optional<UserGroup> findGroupById(Integer groupId) {
         Optional<UserGroup> groupOptional = userGroupRepository.findById(groupId);
@@ -44,5 +50,7 @@ public class UserGroupService {
     public void deleteById(Integer groupId) {
         userGroupRepository.deleteById(groupId);
     }
+
+
 
 }

@@ -28,4 +28,9 @@ public class UserService {
     public Optional<User> findByEmailWithGroups(String email) {
         return userRepository.findByEmailWithGroups(email);
     }
+
+    public User deleteAccount(Integer id) {
+        User user = userRepository.findById(id).orElseThrow();
+        userRepository.delete(user);
+        return user;}
 }

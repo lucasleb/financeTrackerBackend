@@ -74,7 +74,7 @@ public class UserGroupController {
 
         User currentUser = (User) authentication.getPrincipal();
 
-        List<UserGroup> groups = userGroupService.findGroupsByUser(currentUser);
+        List<UserGroup> groups = userGroupService.findGroupsByMember(currentUser);
 
         List<UserGroupDto> userGroupDtos = groups.stream()
                 .map(group -> {
