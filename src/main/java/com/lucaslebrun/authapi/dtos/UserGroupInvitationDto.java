@@ -1,42 +1,49 @@
 package com.lucaslebrun.authapi.dtos;
 
-import com.lucaslebrun.authapi.entities.User;
-import com.lucaslebrun.authapi.entities.UserGroup;
-
-
 public class UserGroupInvitationDto {
 
-    private User author;
+    private Integer invitationId;
 
-    private UserGroup group;
+    private Integer groupId;
 
-    private User invitedUser;
+    private String groupName;
 
-    public UserGroup getGroup() {
-        return group;
+    private String invitedUserEmail;
+
+    public Integer getGroupId() {
+        return groupId;
     }
 
-    public UserGroupInvitationDto setGroup(UserGroup group) {
-        this.group = group;
+    public UserGroupInvitationDto setGroupId(Integer groupId) {
+        this.groupId = groupId;
         return this;
     }
 
-    public User getInvitedUser() {
-        return invitedUser;
+    public String getInvitedUserEmail() {
+        return invitedUserEmail;
     }
 
-    public UserGroupInvitationDto setInvitedUser(User invitedUser) {
-        this.invitedUser = invitedUser;
+    public UserGroupInvitationDto setInvitedUserEmail(String invitedUserEmail) {
+        this.invitedUserEmail = invitedUserEmail;
         return this;
     }
 
-    public User getAuthor() {
-        return author;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public UserGroupInvitationDto setAuthor(User author) {
-        this.author = author;
+    public UserGroupInvitationDto setGroupName(String groupName) {
+        this.groupName = groupName;
         return this;
     }
-    
+
+    public Integer getInvitationId() {
+        return invitationId;
+    }
+
+    public UserGroupInvitationDto setInvitationId(Integer invitationId) {
+        this.invitationId = invitationId;
+        return this;
+    }
+
 }

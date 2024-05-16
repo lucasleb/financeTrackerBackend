@@ -25,12 +25,13 @@ public class UserService {
         return users;
     }
 
-    public Optional<User> findByEmailWithGroups(String email) {
-        return userRepository.findByEmailWithGroups(email);
+    public User findByEmail(String invitedUserEmail) {
+        return userRepository.findByEmail(invitedUserEmail).orElse(null);
     }
 
-    public User deleteAccount(Integer id) {
-        User user = userRepository.findById(id).orElseThrow();
+    public void deleteAccount(User user) {
         userRepository.delete(user);
-        return user;}
+    }
+
+
 }

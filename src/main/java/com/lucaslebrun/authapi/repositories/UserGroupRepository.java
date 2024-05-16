@@ -13,4 +13,5 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Integer> {
     List<UserGroup> findByAdmin(User user);
 
     List<UserGroup> findByMembers(User user);
+
 }

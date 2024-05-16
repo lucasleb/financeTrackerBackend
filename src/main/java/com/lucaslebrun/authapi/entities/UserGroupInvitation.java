@@ -66,5 +66,4 @@ public class UserGroupInvitation {
         this.userGroup = userGroup;
     }
 
-    
 }

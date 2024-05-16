@@ -14,7 +14,7 @@ public class UserGroup {
     @Column(nullable = false)
     private String groupName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_group_members", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> members = new HashSet<>();
 
@@ -49,6 +49,7 @@ public class UserGroup {
     }
 
     public Set<User> getMembers() {
+
         return members;
     }
 
@@ -62,5 +63,12 @@ public class UserGroup {
 
     public void setAdmin(User admin) {
         this.admin = admin;
+    }
+
+    public void addMember(User user) {
+        if (members == null) {
+            members = new HashSet<>();
+        }
+        members.add(user);
     }
 }

@@ -41,7 +41,7 @@ public class UserController {
     // }
 
     @DeleteMapping("/delete_account/{id}")
-    public ResponseEntity<User> deleteAccount(@PathVariable Integer id){
+    public ResponseEntity<Void> deleteAccount(@PathVariable Integer id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         
@@ -60,8 +60,8 @@ public class UserController {
             userGroupService.save(group);
         }
             
-            User deletedUser = userService.deleteAccount(id);
-            return ResponseEntity.ok(deletedUser);
+        userService.deleteAccount(currentUser);
+        return ResponseEntity.noContent().build();
     }
 
 }

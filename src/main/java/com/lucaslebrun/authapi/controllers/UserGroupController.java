@@ -190,7 +190,6 @@ public class UserGroupController {
         User currentUser = (User) authentication.getPrincipal();
         UserGroup userGroup = group.get();
 
-        // Check if the current user is the admin of the group
         if (!userGroup.getAdmin().getId().equals(currentUser.getId())) {
             return ResponseEntity.status(403).build();
         }
