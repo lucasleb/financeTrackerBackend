@@ -43,7 +43,7 @@ public class UserGroupInvitationService {
         return userGroupInvitationRepository.findByAuthor(currentUser);
     }
 
-    public Optional<UserGroupInvitation> findById(Long id) {
+    public Optional<UserGroupInvitation> findById(Integer id) {
         Optional<UserGroupInvitation> invitation = userGroupInvitationRepository.findById(id);
         invitation.ifPresent(destinator -> Hibernate.initialize(destinator.getDestinator()));
         return invitation;

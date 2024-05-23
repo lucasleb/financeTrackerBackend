@@ -86,6 +86,7 @@ public class UserGroupInvitationController {
         User currentUser = authenticationService.getCurrentUser();
 
         List<UserGroupInvitation> invitations = userGroupInvitationService.findByDestinator(currentUser);
+        System.out.println("Invitations fetched");
 
         return ResponseEntity.ok(invitations.stream()
                 .map(invitation -> {
@@ -94,8 +95,10 @@ public class UserGroupInvitationController {
                     dto.setGroupName(invitation.getUserGroup().getGroupName());
                     dto.setInvitedUserEmail(invitation.getDestinator().getEmail());
                     dto.setGroupId(invitation.getUserGroup().getId());
+                    dto.setAuthorEmail(invitation.getAuthor().getEmail());
                     return dto;
                 }).collect(Collectors.toList()));
+
     }
 
     @GetMapping("/pending")
@@ -118,12 +121,14 @@ public class UserGroupInvitationController {
 
     // accept invitation
     @DeleteMapping("/{id}/accept")
-    public ResponseEntity<Void> acceptInvitation(@PathVariable Long id) {
+    public ResponseEntity<Void> acceptInvitation(@PathVariable Integer id) {
+        System.out.println("Accepting invitation");
         User currentUser = authenticationService.getCurrentUser();
 
         UserGroupInvitation invitation = findInvitationById(id);
 
         if (!currentUser.getId().equals(invitation.getDestinator().getId())) {
+            System.out.println("User not the destinator of the invitation");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         // TODO: remove the eager loading of members of the group
@@ -139,7 +144,7 @@ public class UserGroupInvitationController {
     // refuse invitation
 
     @DeleteMapping("/{id}/decline")
-    public ResponseEntity<Void> declineInvitation(@PathVariable Long id) {
+    public ResponseEntity<Void> declineInvitation(@PathVariable Integer id) {
         User currentUser = authenticationService.getCurrentUser();
 
         UserGroupInvitation invitation = findInvitationById(id);
@@ -155,7 +160,7 @@ public class UserGroupInvitationController {
 
     // delete invitation
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInvitation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteInvitation(@PathVariable Integer id) {
         User currentUser = authenticationService.getCurrentUser();
 
         UserGroupInvitation invitation = findInvitationById(id);
@@ -169,7 +174,7 @@ public class UserGroupInvitationController {
         return ResponseEntity.noContent().build();
     }
 
-    private UserGroupInvitation findInvitationById(Long id) {
+    private UserGroupInvitation findInvitationById(Integer id) {
 
         return userGroupInvitationService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found"));

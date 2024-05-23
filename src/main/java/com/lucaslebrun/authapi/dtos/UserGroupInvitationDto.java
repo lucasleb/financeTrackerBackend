@@ -10,6 +10,9 @@ public class UserGroupInvitationDto {
 
     private String invitedUserEmail;
 
+    private String authorEmail;
+
+
     public UserGroupInvitationDto() {
     }
 
@@ -20,6 +23,15 @@ public class UserGroupInvitationDto {
 
     public Integer getGroupId() {
         return groupId;
+    }
+
+    public String getAuthorEmail() {
+        return authorEmail;
+    }
+
+    public UserGroupInvitationDto setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
+        return this;
     }
 
     public UserGroupInvitationDto setGroupId(Integer groupId) {
