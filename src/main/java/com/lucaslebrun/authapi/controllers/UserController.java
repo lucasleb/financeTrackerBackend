@@ -11,9 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import java.util.List;
 
@@ -36,15 +34,15 @@ public class UserController {
 
     // @GetMapping("/all")
     // public ResponseEntity<List<User>> allUsers() {
-    //     List<User> users = userService.allUsers();
-    //     return ResponseEntity.ok(users);
+    // List<User> users = userService.allUsers();
+    // return ResponseEntity.ok(users);
     // }
 
     @DeleteMapping("/delete_account/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable Integer id){
+    public ResponseEntity<Void> deleteAccount(@PathVariable Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        
+
         if (!currentUser.getId().equals(id)) {
             return ResponseEntity.badRequest().build();
         }
@@ -59,7 +57,7 @@ public class UserController {
             group.getMembers().remove(currentUser);
             userGroupService.save(group);
         }
-            
+
         userService.deleteAccount(currentUser);
         return ResponseEntity.noContent().build();
     }

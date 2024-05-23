@@ -35,6 +35,11 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
 
+        // if auhtenification fails, return 401
+        if (authenticatedUser == null) {
+            return ResponseEntity.status(401).build();
+        }
+
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken)

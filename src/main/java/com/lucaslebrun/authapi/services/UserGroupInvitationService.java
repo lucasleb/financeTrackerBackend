@@ -18,12 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserGroupInvitationService {
     private final UserGroupInvitationRepository userGroupInvitationRepository;
 
-    private final UserGroupService userGroupService;
-
-    public UserGroupInvitationService(UserGroupInvitationRepository userGroupInvitationRepository,
-            UserGroupService userGroupService) {
+    public UserGroupInvitationService(UserGroupInvitationRepository userGroupInvitationRepository) {
         this.userGroupInvitationRepository = userGroupInvitationRepository;
-        this.userGroupService = userGroupService;
     }
 
     public void deleteById(Integer invitationId) {
@@ -55,13 +51,6 @@ public class UserGroupInvitationService {
 
     public void deleteById(Long id) {
         userGroupInvitationRepository.deleteById(id);
-    }
-
-    @Transactional
-    public UserGroup getGroupFromInvitation(UserGroupInvitation invitation) {
-        UserGroup group = invitation.getUserGroup();
-        Hibernate.initialize(group.getMembers());
-        return group;
     }
 
 }

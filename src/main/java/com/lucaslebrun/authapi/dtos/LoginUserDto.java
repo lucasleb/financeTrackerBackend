@@ -5,7 +5,13 @@ public class LoginUserDto {
 
     private String password;
 
-    // getters and setters here...
+    public LoginUserDto() {
+    }
+
+    public LoginUserDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public String getEmail() {
         return email;

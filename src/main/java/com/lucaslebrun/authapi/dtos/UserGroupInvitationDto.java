@@ -10,6 +10,14 @@ public class UserGroupInvitationDto {
 
     private String invitedUserEmail;
 
+    public UserGroupInvitationDto() {
+    }
+
+    public UserGroupInvitationDto(Integer groupId, String invitedUserEmail) {
+        this.groupId = groupId;
+        this.invitedUserEmail = invitedUserEmail;
+    }
+
     public Integer getGroupId() {
         return groupId;
     }
