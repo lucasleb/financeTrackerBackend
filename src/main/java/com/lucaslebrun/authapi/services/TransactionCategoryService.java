@@ -32,6 +32,8 @@ public class TransactionCategoryService {
         transactionCategoryRepository.delete(transactionCategory);
     }
 
+    // TODO: Refactor this method to return a List<TransactionCategory> instead of
+    // Optional<List<TransactionCategory>> like for the TransactionService
     public Optional<List<TransactionCategory>> findByUserGroups(Set<UserGroup> userGroups) {
         List<TransactionCategory> transactionCategories = userGroups.stream()
                 .flatMap(userGroup -> transactionCategoryRepository.findByUserGroup(userGroup).stream())

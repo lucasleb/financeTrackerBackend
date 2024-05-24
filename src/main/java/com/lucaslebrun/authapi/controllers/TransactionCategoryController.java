@@ -52,14 +52,21 @@ public class TransactionCategoryController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        TransactionCategory transactionCategory = transactionCategoryService
-                .save(new TransactionCategory(TransactionCategoryDto.getName(), usergroup));
+        TransactionCategory transactionCategory = new TransactionCategory();
+        transactionCategory.setName(TransactionCategoryDto.getName());
+        transactionCategory.setUserGroup(usergroup);
+        transactionCategory.setType(TransactionCategoryDto.getType());
+        if (TransactionCategoryDto.getBudget() != null) {
+            transactionCategory.setBudget(TransactionCategoryDto.getBudget());
+        }
+
+        transactionCategoryService.save(transactionCategory);
 
         return ResponseEntity.ok(new TransactionCategoryDto().setId(transactionCategory.getId())
-                .setName(transactionCategory.getName()).setUserGroupId(transactionCategory.getUserGroup().getId()));
-    }
+                .setName(transactionCategory.getName()).setUserGroupId(transactionCategory.getUserGroup().getId())
+                .setType(transactionCategory.getType()).setBudget(transactionCategory.getBudget()));
 
-    // edit endpoint
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<TransactionCategoryDto> editTransactionCategory(@PathVariable Integer id,
@@ -74,10 +81,15 @@ public class TransactionCategoryController {
         }
 
         transactionCategory.setName(TransactionCategoryDto.getName());
+        transactionCategory.setType(TransactionCategoryDto.getType());
+        if (TransactionCategoryDto.getBudget() != null) {
+            transactionCategory.setBudget(TransactionCategoryDto.getBudget());
+        }
         transactionCategoryService.save(transactionCategory);
 
         return ResponseEntity.ok(new TransactionCategoryDto().setId(transactionCategory.getId())
-                .setName(transactionCategory.getName()).setUserGroupId(transactionCategory.getUserGroup().getId()));
+                .setName(transactionCategory.getName()).setUserGroupId(transactionCategory.getUserGroup().getId())
+                .setType(transactionCategory.getType()).setBudget(transactionCategory.getBudget()));
     }
 
     @DeleteMapping("/{id}")
@@ -104,15 +116,17 @@ public class TransactionCategoryController {
 
         List<TransactionCategory> transactionCategories = transactionCategoryService
                 .findByUserGroups(currentUser.getGroups()).orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction Categories not found"));
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User has no groups"));
 
         if (transactionCategories.isEmpty()) {
             return ResponseEntity.ok().build();
         }
-
         return ResponseEntity.ok(transactionCategories.stream().map(transactionCategory -> new TransactionCategoryDto()
                 .setId(transactionCategory.getId()).setName(transactionCategory.getName())
-                .setUserGroupId(transactionCategory.getUserGroup().getId())).collect(Collectors.toList()));
+                .setUserGroupId(transactionCategory.getUserGroup().getId())
+                .setType(transactionCategory.getType()).setBudget(transactionCategory.getBudget()))
+                .collect(Collectors.toList()));
+
     }
 
     @GetMapping("/usergroup/{id}")
@@ -147,7 +161,9 @@ public class TransactionCategoryController {
 
         return ResponseEntity.ok(transactionCategories.stream().map(transactionCategory -> new TransactionCategoryDto()
                 .setId(transactionCategory.getId()).setName(transactionCategory.getName())
-                .setUserGroupId(transactionCategory.getUserGroup().getId())).collect(Collectors.toList()));
+                .setUserGroupId(transactionCategory.getUserGroup().getId())
+                .setType(transactionCategory.getType()).setBudget(transactionCategory.getBudget()))
+                .collect(Collectors.toList()));
     }
 
 }

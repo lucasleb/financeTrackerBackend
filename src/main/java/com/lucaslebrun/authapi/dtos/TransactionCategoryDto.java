@@ -1,5 +1,9 @@
 package com.lucaslebrun.authapi.dtos;
 
+import java.math.BigDecimal;
+
+import com.lucaslebrun.authapi.entities.TransactionCategory.TransactionType;
+
 public class TransactionCategoryDto {
 
     private Integer id;
@@ -8,12 +12,24 @@ public class TransactionCategoryDto {
 
     private Integer userGroupId;
 
+    private TransactionType type;
+
+    private BigDecimal budget;
+
     public TransactionCategoryDto() {
     }
 
-    public TransactionCategoryDto(String name, Integer userGroupId) {
+    public TransactionCategoryDto(String name, Integer userGroupId, TransactionType type, BigDecimal budget) {
         this.name = name;
         this.userGroupId = userGroupId;
+        this.type = type;
+        this.budget = budget;
+    }
+
+    public TransactionCategoryDto(String name, Integer userGroupId, TransactionType type) {
+        this.name = name;
+        this.userGroupId = userGroupId;
+        this.type = type;
     }
 
     public Integer getId() {
@@ -42,5 +58,23 @@ public class TransactionCategoryDto {
         this.userGroupId = userGroupId;
         return this;
     }
-    
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public TransactionCategoryDto setType(TransactionType type) {
+        this.type = type;
+        return this;
+    }
+
+    public BigDecimal getBudget() {
+        return budget;
+    }
+
+    public TransactionCategoryDto setBudget(BigDecimal budget) {
+        this.budget = budget;
+        return this;
+    }
+
 }
