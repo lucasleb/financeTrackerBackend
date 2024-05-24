@@ -96,6 +96,37 @@ public class UserGroupController {
         return ResponseEntity.ok(userGroupDtos);
     }
 
+    @GetMapping("/admin")
+    public ResponseEntity<List<UserGroupDto>> myAdminGroups() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User currentUser = (User) authentication.getPrincipal();
+
+        List<UserGroup> groups = userGroupService.findGroupsByAdmin(currentUser);
+
+        List<UserGroupDto> userGroupDtos = groups.stream()
+                .map(group -> {
+                    UserGroupDto dto = new UserGroupDto();
+                    dto.setId(group.getId());
+                    dto.setGroupName(group.getGroupName());
+                    dto.setAdmin(new UserDto(group.getAdmin()));
+                    List<UserDto> memberDtos = group.getMembers().stream()
+                            .map(member -> {
+                                UserDto userDto = new UserDto(member);
+                                return userDto;
+                            })
+                            .collect(Collectors.toList());
+                    dto.setMembers(memberDtos);
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userGroupDtos);
+    }
+
     @GetMapping("/{groupId}")
     public ResponseEntity<UserGroupDto> getGroup(@PathVariable Integer groupId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
