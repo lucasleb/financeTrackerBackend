@@ -86,7 +86,6 @@ public class UserGroupInvitationController {
         User currentUser = authenticationService.getCurrentUser();
 
         List<UserGroupInvitation> invitations = userGroupInvitationService.findByDestinator(currentUser);
-        System.out.println("Invitations fetched");
 
         return ResponseEntity.ok(invitations.stream()
                 .map(invitation -> {
