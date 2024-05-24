@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @ManyToMany(mappedBy = "members")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "members")
     @JsonIgnore // Avoid circular references during serialization
     private Set<UserGroup> groups = new HashSet<>();
 
