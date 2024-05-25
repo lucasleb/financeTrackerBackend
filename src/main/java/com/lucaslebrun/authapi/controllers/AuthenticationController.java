@@ -5,6 +5,7 @@ import com.lucaslebrun.authapi.dtos.LoginUserDto;
 import com.lucaslebrun.authapi.dtos.RegisterUserDto;
 import com.lucaslebrun.authapi.responses.LoginResponse;
 import com.lucaslebrun.authapi.services.AuthenticationService;
+import com.lucaslebrun.authapi.services.DemoService;
 import com.lucaslebrun.authapi.services.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +20,13 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    private final DemoService demoService;
+
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService,
+            DemoService demoService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.demoService = demoService;
     }
 
     @PostMapping("/signup")
@@ -38,6 +43,12 @@ public class AuthenticationController {
         // if auhtenification fails, return 401
         if (authenticatedUser == null) {
             return ResponseEntity.status(401).build();
+        }
+
+        // if the authenticated user's email is "user@demo.com", populate the database
+        // with dummy data
+        if ("demo@user.com".equals(authenticatedUser.getEmail())) {
+            demoService.initializeDemoSetup();
         }
 
         String jwtToken = jwtService.generateToken(authenticatedUser);

@@ -1,6 +1,7 @@
 package com.lucaslebrun.authapi.repositories;
 
 import com.lucaslebrun.authapi.entities.User;
+import com.lucaslebrun.authapi.entities.UserGroup;
 import com.lucaslebrun.authapi.entities.UserGroupInvitation;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface UserGroupInvitationRepository extends JpaRepository<UserGroupIn
     Optional<UserGroupInvitation> findById(Long id);
 
     void deleteById(Long id);
+
+    void deleteByUserGroup(UserGroup userGroup);
 
 }
