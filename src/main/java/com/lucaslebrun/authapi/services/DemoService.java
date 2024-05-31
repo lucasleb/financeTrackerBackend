@@ -194,6 +194,11 @@ public class DemoService {
         transactionCategoryRepository.findByUserGroup(userGroup).forEach(transactionCategory -> {
             BigDecimal budget = transactionCategory.getBudget();
             BigDecimal proportionnalBudget = budget.multiply(new BigDecimal(fractionYear));
+            // if transactionCateogry.type == TransactionType.EXPENSE, multiply
+            // proportionnalBudget by a random number between 0.5 and 1.5
+            if (transactionCategory.getType() == TransactionType.EXPENSE) {
+                proportionnalBudget = proportionnalBudget.multiply(new BigDecimal(0.5 + Math.random()));
+            }
             while (proportionnalBudget.compareTo(BigDecimal.ZERO) > 0) {
                 BigDecimal transactionAmount = new BigDecimal(
                         Math.round(10. + Math.random() * 100.));

@@ -3,6 +3,7 @@ package com.lucaslebrun.authapi.controllers;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -215,5 +216,20 @@ public class TransactionController {
         return ResponseEntity.ok().build();
 
     }
+
+@GetMapping
+    public ResponseEntity<List<TransactionDto>> getTransactions(
+            @RequestParam(required = false) Integer categoryId) {
+        TransactionCategory transactionCategory = transactionCategoryService.findById(categoryId);
+        List<Transaction> transactions = transactionService.findByTransactionCategory(transactionCategory);
+
+    List<TransactionDto> transactionDtos = transactions.stream()
+        .map(transaction -> new TransactionDto().setId(transaction.getId())
+            .setDescription(transaction.getDescription()).setDate(transaction.getDate())
+            .setAmount(transaction.getAmount())
+            .setCategoryId(transaction.getTransactionCategory().getId()))
+        return ResponseEntity.ok(transactionDtos);
+    }
+
 
 }
