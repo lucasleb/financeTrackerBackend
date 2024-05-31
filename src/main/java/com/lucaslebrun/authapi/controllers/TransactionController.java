@@ -217,19 +217,21 @@ public class TransactionController {
 
     }
 
-@GetMapping
+    @GetMapping
     public ResponseEntity<List<TransactionDto>> getTransactions(
             @RequestParam(required = false) Integer categoryId) {
-        TransactionCategory transactionCategory = transactionCategoryService.findById(categoryId);
+        TransactionCategory transactionCategory = transactionCategoryService.findById(categoryId)
+                .orElse(null);
         List<Transaction> transactions = transactionService.findByTransactionCategory(transactionCategory);
 
-    List<TransactionDto> transactionDtos = transactions.stream()
-        .map(transaction -> new TransactionDto().setId(transaction.getId())
-            .setDescription(transaction.getDescription()).setDate(transaction.getDate())
-            .setAmount(transaction.getAmount())
-            .setCategoryId(transaction.getTransactionCategory().getId()))
+        List<TransactionDto> transactionDtos = transactions.stream()
+                .map(transaction -> new TransactionDto().setId(transaction.getId())
+                        .setDescription(transaction.getDescription()).setDate(transaction.getDate())
+                        .setAmount(transaction.getAmount())
+                        .setCategoryId(transaction.getTransactionCategory().getId()))
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(transactionDtos);
+
     }
-
-
 }
